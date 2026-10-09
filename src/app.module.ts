@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { createObserveModule } from '@nestjs/observe';
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path/win32';
+import { join } from 'node:path';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { PingResolver } from './ping.resolver.js';
 
@@ -11,7 +11,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src', 'schema.gql'),
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       graphiql: true,
     }),

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "prod-001",
+    "name": "Apple iPhone 15 Pro Max 256GB - Titanio Negro",
+    "image": "https://picsum.photos/seed/prod-001/300/300",
+    "store": "amazon"
+  },
+  {
+    "id": "prod-002",
+    "name": "Samsung Galaxy S24 Ultra 512GB - Titanium Gray",
+    "image": "https://picsum.photos/seed/prod-002/300/300",
+    "store": "amazon"
+  },
+  {
+    "id": "prod-003",
+    "name": "Sony WH-1000XM5 Audífonos Inalámbricos Noise Cancelling",
+    "image": "https://picsum.photos/seed/prod-003/300/300",
+    "store": "amazon"
+  },
+  {
+    "id": "prod-004",
+    "name": "Apple MacBook Air 13 Pulgadas M3 256GB SSD 8GB RAM",
+    "image": "https://picsum.photos/seed/prod-004/300/300",
+    "store": "amazon"
+  },
+  {
+    "id": "prod-005",
+    "name": "Nintendo Switch OLED 64GB Edición Estándar",
+    "image": "https://picsum.photos/seed/prod-005/300/300",
+    "store": "amazon"
+  }
+]

@@ -1,0 +1,57 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
+}
+
+model Product {
+    uuid       String   @id @default(uuid()) @db.Uuid
+    name       String
+    brand      String?
+    model      String?
+    storage    String?
+    color      String?
+    imageUrl   String   @map("image_url")
+    category   String?
+    searchText String?  @map("search_text")
+    createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+    updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+    prices Price[]
+
+    @@map("Product")
+}
+
+model Store {
+    id          Int     @id @default(autoincrement())
+    name        String  @unique
+    countryCode String  @default("MX") @map("country_code") @db.Char(2)
+    apiEndpoint String? @map("api_endpoint")
+    isActive    Boolean @default(true) @map("is_active")
+
+    prices Price[]
+
+    @@map("Store")
+}
+
+model Price {
+    time        DateTime @db.Timestamptz
+    productUuid String   @map("product_uuid") @db.Uuid
+    storeId     Int      @map("store_id")
+    priceAmount Decimal  @map("price_amount") @db.Decimal(12, 2)
+    currency    String   @default("MXN") @db.Char(3)
+    isCurrent   Boolean  @default(false) @map("is_current")
+
+    product Product @relation(fields: [productUuid], references: [uuid], onDelete: Cascade)
+    store   Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+    @@id([time, productUuid, storeId])
+    @@index([productUuid, time(sort: Desc)], name: "Price_product_uuid_time_idx")
+    @@index([storeId], name: "Price_store_id_idx")
+    @@index([currency], name: "Price_currency_idx")
+    @@map("Price")
+}
