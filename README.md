@@ -1,118 +1,187 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Price Comparator Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend de un comparador de precios desarrollado con NestJS, GraphQL y Prisma. El proyecto está pensado para servir como base para consultar productos, comparar precios entre distintas tiendas y revisar el historial de costos de un mismo artículo.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+> Estado actual: proyecto en desarrollo activo. La estructura base ya está implementada, pero aún se está definiendo la capa de persistencia real, la integración con fuentes de datos externas y la finalización de funcionalidades más avanzadas.
 
-## Description
+## ¿De qué trata este proyecto?
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Este backend busca centralizar la lógica para:
 
-## Project setup
+- buscar productos por nombre o palabra clave,
+- consultar el detalle de un producto concreto,
+- comparar precios por tienda,
+- analizar el precio mínimo, máximo y actual de un producto,
+- preparar la base para conectar datos reales de marketplaces o tiendas en línea.
 
-```bash
-$ npm install
-```
+La idea general es crear una API que pueda servir a una aplicación frontend (web o móvil) para mostrar comparaciones de precios de forma clara y reutilizable.
 
-## Compile and run the project
+## Arquitectura actual
 
-```bash
-# development
-$ npm run start
+El proyecto usa una estructura NestJS con los siguientes bloques principales:
 
-# watch mode
-$ npm run start:dev
+- `src/app.module.ts`: módulo raíz de la aplicación.
+- `src/products/`: módulo encargado de productos y comparativas.
+- `src/fixtures/`: datos de ejemplo utilizados como mock para pruebas y desarrollo.
+- `prisma/schema.prisma`: definición de modelos de base de datos (`Product`, `Store`, `Price`).
+- `prisma/seed.ts`: script para inicializar tiendas base.
 
-# production mode
-$ npm run start:prod
-```
+## Funcionalidad actual
 
-## Run tests
+Actualmente el backend expone consultas GraphQL relacionadas con productos. Entre las principales se encuentran:
 
-```bash
-# unit tests
-$ npm run test
+- `searchProducts(query: String!)`: busca productos por texto.
+- `productDetail(id: ID!)`: devuelve el detalle de un producto y su historial de precios.
 
-# e2e tests
-$ npm run test:e2e
+### Modelo de datos
 
-# test coverage
-$ npm run test:cov
-```
+El proyecto tiene una lógica de productos y precios basada en estos modelos:
 
-## Deployment
+- `Product`: información base del artículo.
+- `Store`: tiendas o marketplaces soportados.
+- `Price`: historial de precios por producto y tienda.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+También se consideran campos como:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- nombre
+- marca
+- modelo
+- almacenamiento
+- color
+- categoría
+- imagen
+- historial de precios por fecha
+
+## Estructura del proyecto
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+.
+├── prisma/
+│   ├── schema.prisma
+│   ├── seed.ts
+│   └── migrations/
+├── src/
+│   ├── app.module.ts
+│   ├── fixtures/
+│   │   ├── mock-data.json
+│   │   └── search-index.json
+│   ├── products/
+│   │   ├── models/
+│   │   ├── repositories/
+│   │   ├── products.module.ts
+│   │   ├── products.resolver.ts
+│   │   └── products.service.ts
+│   ├── ping.resolver.ts
+│   └── schema.gql
+├── package.json
+├── tsconfig.json
+├── .env
+├── README.md
+└── ...
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Tecnologías utilizadas
 
-## Observability
+- Node.js
+- TypeScript
+- NestJS
+- GraphQL
+- Prisma
+- PostgreSQL (preparado en schema)
+- Vitest (para pruebas)
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+## Requisitos
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+Antes de ejecutar el proyecto asegúrate de tener instalado:
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+- Node.js 18+
+- npm o pnpm
+- PostgreSQL (si vas a usar Prisma con base de datos real)
 
-This project is already instrumented. Create a free account at [observe.nestjs.com](https://observe.nestjs.com), add an application, and paste the generated app key and secret into the `ObserveModule.forRoot()` call in `src/app.module.ts`.
+## Instalación
 
-The free plan needs no payment details and covers 300,000 events a month. You can also browse the [live demo](https://www.observe-demo.nestjs.com/dashboard) first - the whole dashboard over a busy service's data, with nothing to install.
+```bash
+npm install
+```
 
-## Resources
+## Variables de entorno
 
-Check out a few resources that may come in handy when working with NestJS:
+Crea un archivo `.env` con la configuración de Prisma y la base de datos. Un ejemplo básico sería:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observe](https://observe.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```env
+DATABASE_URL="postgresql://usuario:password@localhost:5432/price_comparator?schema=public"
+DIRECT_URL="postgresql://usuario:password@localhost:5432/price_comparator?schema=public"
+```
 
-## Support
+## Ejecutar el proyecto
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Desarrollo
 
-## Stay in touch
+```bash
+npm run start
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Modo observador
 
-## License
+```bash
+npm run start:dev
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Producción
+
+```bash
+npm run build
+npm run start:prod
+```
+
+## Scripts disponibles
+
+```bash
+npm run test        # ejecuta pruebas
+npm run test:watch  # pruebas en modo watch
+npm run test:cov    # cobertura
+npm run lint        # validación con oxlint
+npm run build       # compilación del backend
+npm run generate-mock # generación de datos de ejemplo
+```
+
+## Pruebas
+
+El proyecto ya incluye una configuración de pruebas con Vitest. Se usa para validar la lógica del backend y facilitar cambios futuros.
+
+```bash
+npm run test
+```
+
+## Datos actuales
+
+La aplicación actualmente usa información mockeada dentro de `src/fixtures/` para simular productos y búsqueda. Esto permite desarrollar y validar el comportamiento del API antes de conectar fuentes de datos reales.
+
+Esto es especialmente útil para:
+
+- definir el contrato del API,
+- validar consultas GraphQL,
+- establecer el flujo de comparación de precios,
+- preparar la integración con tiendas reales.
+
+## Roadmap sugerido
+
+Este proyecto sigue en proceso y puede evolucionar en varias direcciones:
+
+1. Integración real con APIs de tiendas y marketplaces.
+2. Persistencia completa con Prisma y PostgreSQL.
+3. Scraping o sincronización automática de precios.
+4. Autenticación y autorización.
+5. Endpoints adicionales para historial, alertas y favoritos.
+6. Dashboard de análisis de precios y tendencias.
+7. Optimización de consultas y caché.
+
+## Nota importante
+
+Este repositorio aún no está en una versión final de producción. La base funcional ya existe, pero la capa de negocio, integración y datos reales están en evolución.
+
+Si quieres participar o continuar con el desarrollo, este proyecto sirve como base sólida para construir un comparador de precios más completo.
+
+## Licencia
+
+Este proyecto aún no define una licencia específica en el código base. Se recomienda revisar este punto antes de compartirlo públicamente o usarlo en producción.
