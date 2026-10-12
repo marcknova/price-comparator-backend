@@ -94,7 +94,6 @@ function getIsoDate(date: Date): string {
   return date.toISOString().split('T')[0];
 }
 
-// 2. Función de curva estacional paramétrica
 function calculateSeasonalMultiplier(date: Date): number {
   const month = date.getMonth(); // 0 = Enero, 10 = Noviembre
   const day = date.getDate();
@@ -171,7 +170,6 @@ function generateMockData() {
       }
     }
 
-    // Registro completo para mock-data.json
     mockData.push({
       id: prod.id,
       name: prod.name,
@@ -185,7 +183,6 @@ function generateMockData() {
       pricesByStore,
     });
 
-    // Entrada simplificada para search-index.json
     searchIndex.push({
       id: prod.id,
       name: prod.name,
@@ -194,7 +191,6 @@ function generateMockData() {
     });
   }
 
-  // 4. Escritura de archivos
   const fixturesDir = resolve(process.cwd(), 'src', 'fixtures');
   
   writeFileSync(

@@ -2,7 +2,53 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type PricePoint {
+  amazon: Float
+  date: String!
+  liverpool: Float
+  mercadolibre: Float
+  walmart: Float
+}
+
+type PriceStats {
+  currency: String!
+  currentPrice: Float!
+  currentStore: String!
+  globalMax: Float!
+  globalMaxDate: String!
+  globalMaxStore: String!
+  globalMin: Float!
+  globalMinDate: String!
+  globalMinStore: String!
+}
+
+type Product {
+  brand: String
+  category: String
+  color: String
+  id: ID!
+  image: String!
+  model: String
+  name: String!
+  storage: String
+}
+
+type ProductDetail {
+  history: [PricePoint!]!
+  product: Product!
+  stats: PriceStats!
+}
+
 type Query {
   """Health check query"""
   ping: String!
+  productDetail(id: ID!): ProductDetail!
+  searchProducts(query: String!): [SearchResult!]!
+}
+
+type SearchResult {
+  id: ID!
+  image: String!
+  name: String!
+  store: String!
 }
